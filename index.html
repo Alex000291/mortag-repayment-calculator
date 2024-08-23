@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <title>Frontend Mentor | Mortgage repayment calculator</title>
+
+</head>
+<body class="bg-white flex justify-center items-center min-h-screen" style="padding: 50px;">
+  <div class="flex shadow-lg" style="background-color: rgb(227,244,252);padding: 50px;">
+    <div class="bg-white flex-1 rounded-l-xl p-8">
+      <div class="flex justify-between">
+        <h2 class="inline font-bold">Mortgage Calculator</h2> <span style="color: rgb(176, 177, 179);">Clear All</span>
+      </div>
+      
+      
+      <div class="flex flex-col gap-2 mt-2" style="color: rgb(180, 180, 180);">
+        Mortgage Amount
+        <div class="rounded-xl border-solid inline-flex items-center w-full" style="border: 1px solid black;">
+          <span class="flex justify-center items-center rounded-l-xl" style="width:32px;height:32px;background-color: rgb(81, 131, 177);">
+            <i class="fa-solid fa-sterling-sign"></i>
+          </span>
+          <input type="number" id="mortgage_amount" class="w-full" style="margin-left: 8px;border:none;outline:none;color:black;">
+        </div>
+
+        <div class="flex" style="color: rgb(180, 180, 180);">
+          <div class="flex-1">
+            Mortgage Term
+            <div class="rounded-xl border-solid inline-flex items-center w-full" style="border: 1px solid black;">
+
+              <input type="number" id="mortgage_term" class="w-full" style="margin-left: 8px;border:none;outline:none;color:black;">
+                <span class="flex justify-center items-center rounded-r-xl" style="width:60px;height:32px;background-color: rgb(81, 131, 177);">
+                  months
+              </span>
+            </div>
+          </div>
+          <div class="flex-1">
+            Interest Rate
+            <div class="rounded-xl border-solid inline-flex items-center w-full" style="border: 1px solid black;">
+
+              <input type="number" id="interest_rate" class="w-full" style="margin-left: 8px;border:none;outline:none;color:black;">
+                <span class="flex justify-center items-center rounded-r-xl" style="width:32px;height:32px;background-color: rgb(81, 131, 177);">
+                  %
+              </span>
+            </div>
+          </div>
+      </div>
+
+      <div  class="flex flex-col gap-3">
+        Mortgage Type
+         <div class="text-black p-2" style="border: 1px solid black;" id="repayment">
+          <i class="fa-regular fa-square-check" id="repayment_check_null"></i>
+          <i class="fa-solid fa-square-check hidden" id="repayment_check_confirm"></i>
+         Repayment
+         </div>
+         <div class="text-black p-2" style="border: 1px solid black;" id="interest_only">
+          <i class="fa-regular fa-square-check" id="interest_only_check_null"></i>
+          <i class="fa-solid fa-square-check hidden" id="interest_only_check_confirm"></i>
+          Interest Only
+        </div>
+      </div>
+
+      </div>
+
+      <button class="rounded-full p-4 mt-5" style="background-color: rgb(157, 207, 38);" id="calculate">
+        <img src="assets/images/icon-calculator.svg" alt="" class="inline">
+        Calculate
+      </button>
+    </div>
+
+    <div class="flex-1 rounded-r-xl rounded-bl-[50px]  p-8" style="background-color: rgb(18,48,63);">
+      <h2 class="text-white">
+      Your results
+      </h2>
+      <p class="text-gray-400 my-3">
+      Your results are shown below based on the information you provided. 
+      To adjust the results, edit the form and click “calculate repayments” again.
+      </p>
+
+      <div class="p-5 border-t-4 border-green-400" style="background-color:rgb(14, 37, 50)">
+
+      <div class="border-b-2 border-gray-400 pb-7">
+      <p class="text-gray-400 my-3">
+      Your monthly repayments
+      </p>
+      <h2 class=" text-[40px]" style="color:rgb(186, 201, 75)" id="monthly_repayments">
+        £0
+      </h2>
+      </div>
+
+
+      <p class="text-gray-400 my-3">
+      Total you'll repay over the term
+      </p>
+      <h2 class="text-white text-[15px]" id="total_repay">
+        £0
+      </h2>
+      </div>
+    </div>
+</div>
+
+
+  
+<script>
+  const mortgage_amount = document.getElementById('mortgage_amount');
+  const mortgage_term = document.getElementById('mortgage_term');
+  const interest_rate = document.getElementById('interest_rate');
+  let mortgage_type = null;
+
+  const repayment = document.getElementById('repayment');
+  const repayment_check_null = document.getElementById('repayment_check_null');
+  const repayment_check_confirm = document.getElementById('repayment_check_confirm');
+  const interest_only = document.getElementById('interest_only');
+  const interest_only_check_null = document.getElementById('interest_only_check_null');
+  const interest_only_check_confirm = document.getElementById('interest_only_check_confirm');
+
+  const calculate = document.getElementById('calculate');
+
+  const monthly_repayments = document.getElementById('monthly_repayments');
+  const total_repay = document.getElementById('total_repay');
+
+  repayment.addEventListener('click', function(){
+    repayment_check_null.classList.add('hidden');
+    repayment_check_confirm.classList.remove('hidden');
+    interest_only_check_null.classList.remove('hidden');
+    interest_only_check_confirm.classList.add('hidden');
+    mortgage_type = 'repayment';
+  });
+
+  interest_only.addEventListener('click', function(){
+    interest_only_check_null.classList.add('hidden');
+    interest_only_check_confirm.classList.remove('hidden');
+    repayment_check_null.classList.remove('hidden');
+    repayment_check_confirm.classList.add('hidden');
+    mortgage_type = 'interest_only';
+  });
+
+  calculate.addEventListener('click', function(){
+    console.log('Calculate button clicked');
+    console.log('Mortgage Amount:', mortgage_amount.value);
+    console.log('Mortgage Term:', mortgage_term.value);
+    console.log('Interest Rate:', interest_rate.value);
+    console.log('Mortgage Type:', mortgage_type);
+
+    if(mortgage_amount.value === '' || mortgage_term.value === '' || interest_rate.value === '' || mortgage_type === null){
+      alert('Please fill in all fields');
+    }else{
+      console.log('All fields filled');
+      console.log('Calculating...');
+      let monthly_repayments_value = 0;
+      let total_repay_value = 0;
+
+      if(mortgage_type === 'repayment'){
+        monthly_repayments_value = (mortgage_amount.value / mortgage_term.value) + (mortgage_amount.value * (interest_rate.value / 100));
+        total_repay_value = monthly_repayments_value * mortgage_term.value;
+      }else if(mortgage_type === 'interest_only'){
+        monthly_repayments_value = mortgage_amount.value * (interest_rate.value / 100);
+        total_repay_value = monthly_repayments_value * mortgage_term.value;
+      }
+
+      monthly_repayments.innerText = '£' + monthly_repayments_value.toFixed(2);
+      total_repay.innerText = '£' + total_repay_value.toFixed(2);
+    }
+  });
+</script>
+
+</body>
+</html>
